@@ -1,0 +1,69 @@
+### Task 1
+#To creating directory structure.
+mkdir -p A/{B/{D/{I/M/Z,J/L/Z},E/H/L/Z},C/{F/H/L/Z,G/K/L/Z}}
+ls
+tree A
+
+
+### Task 2
+#Providing the permission to a user only to execute the date command and removing the permission for executing date command for root.
+sudo -i
+date
+which date
+chmod a-x /usr/bin/date
+ls -al /usr/bin/date
+date
+exit
+whoami
+date
+sudo su
+useradd -s /usr/bin/date A1
+su - A1
+setfacl -m u:A1:rwx /usr/bin/date
+su - A1
+chmod a-x /usr/bin/date
+
+
+### Task 3
+#copy one user data into another user
+sudo su
+adduser user_1
+adduser user_2
+su - user_1
+ls
+mkdir adhoc_1
+cd adhoc_1
+touch adhoc_1.txt
+exit
+su - user_2
+ls
+mkdir adhoc_2
+cd adhoc_2
+touch adhoc_2.txt
+exit
+su - user_1
+ls
+cp -r /home/user_2/DIRECTORY /home/user_1/
+ls
+
+###Task 4
+#run cal command for 10sec and store output in /tmp/a.txt
+
+/bin/bash
+
+a=$( date +%S )
+
+if [ $a -lt 50 ];
+then
+    range=10
+    limit=$(( a + range ))
+else
+    range=-50
+    limit=$(( a + range ))
+fi
+
+while [ $a -ne $limit ]
+do
+    a=$( date +%S )
+    cal>>/tmp/a.txt
+done
