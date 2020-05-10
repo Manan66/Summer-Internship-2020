@@ -1,0 +1,45 @@
+#Task
+#To Run 10 Alpine Containers Using Ansible-Playbook From The Host Docker Engine
+#Switching To Root
+su -root
+
+#createing a directory
+mkdir dockeransible
+
+#creating a docker file
+FROM ubuntu
+MAINTAINER manan3349@gmail.com
+RUN apt-get update
+RUN apt install ansible -y
+RUN apt install docker.io -y
+
+
+#creating  a docker image
+docker build -t manan:ansible   
+
+#creating a container
+docker run -it --name ansible manan:ansible bash -v /var/run/docker.sock:/var/run/docker.sock
+
+#accessing ansible by
+cd /etc/ansible/
+#creating a directory
+mkdir ansibleplaybooks
+#creating a script to create 10 container of alpine image with parent command fb.com
+vim ansible.yml
+
+##in ansible.yml
+---
+ - hosts: localhost
+   tasks:
+    - name: Pulling alpine image to run different containers.
+      command: docker pull alpine
+    - name: creating containers 
+      command:  docker run -d --name kc{{ item }} alpine ping fb.com 
+      with_items:
+        - [1,2,3,4,5,6,7,8,9,10]
+
+#running the playbook
+ansible-playbook ansible.yml
+
+#listing all docker containers
+docker ps -a
